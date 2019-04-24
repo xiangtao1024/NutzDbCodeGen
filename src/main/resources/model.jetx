@@ -1,0 +1,50 @@
+package ${packageName};
+
+import org.nutz.dao.entity.annotation.ColDefine;
+import org.nutz.dao.entity.annotation.ColType;
+import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Comment;
+import org.nutz.dao.entity.annotation.Id;
+import org.nutz.dao.entity.annotation.Name;
+import org.nutz.dao.entity.annotation.Table;
+import org.nutz.json.Json;
+import java.util.Date;
+
+@Table("${tablename}")
+public class ${tableModelName} {
+#for (column : columns)
+	/**
+	* ${column.comment}
+	*/
+#if (column.id == 1)
+	@Id(auto = ${column.isAuto})
+#end
+#if (column.name == 1)
+	@Name
+#end	
+	@Column("${column.columnname}")
+	@ColDefine(notNull=${column.notNull==1?true:false}, type=${column.type}, width=${column.width})
+	@Comment(value="${column.comment}")
+	private ${column.filedType} ${column.fieldname};
+#end
+
+#for (column : columns)	
+	/**
+	* ${column.comment}
+	*/
+	public ${column.filedType} ${column.getMethod}() {
+		return ${column.fieldname};
+	}
+	/**
+	* ${column.comment}
+	*/
+	public void ${column.setMethod}(${column.filedType} ${column.fieldname}) {
+		this.${column.fieldname} = ${column.fieldname};
+	}
+#end	
+
+	@Override
+	public String toString() {
+		return Json.toJson(this);
+	}
+}
